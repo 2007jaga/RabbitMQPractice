@@ -1,0 +1,30 @@
+# Build results
+bin/
+obj/
+
+# Visual Studio
+.vs/
+
+# Visual Studio Code
+.vscode/
+
+# User-specific files
+*.user
+*.suo
+
+# Logs
+*.log
+
+# Test Results
+TestResults/
+
+# OS generated files
+Thumbs.db
+.DS_Store
+
+
+# Publish output
+publish/
+
+# Zip artifacts
+*.zip

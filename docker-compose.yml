@@ -1,0 +1,57 @@
+version: '3.8'
+services:
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672" #This is the AMQP port. OrderAPIService will use this port to connect to RabbitMQ.
+      - "15672:15672" #This is not for our application. This is  used for to browser and visit: http://localhost:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin123
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+  
+  orderapi:
+    build:
+      context: .
+      dockerfile: src/OrderAPIService/Dockerfile
+    container_name: orderapi
+    ports:
+      - "8080:8080"
+    depends_on:
+      - rabbitmq
+  
+  # emailapi1:
+  #   image: emailapi:1.0
+  #   environment:
+  #     ConsumerSettings__ConsumerName: Consumer 1
+  #     ConsumerSettings__TimeDelay: 5
+
+  # emailapi2:
+  #   image: emailapi:1.0
+  #   environment:
+  #     ConsumerSettings__ConsumerName: Consumer 2
+  #     ConsumerSettings__TimeDelay: 10
+
+  emailapi1:
+    build:
+      context: .
+      dockerfile: ./src/EmailAPIService/Dockerfile
+    image: emailapi:1.0
+    environment:
+      ConsumerSettings__ConsumerName: Consumer 1
+      ConsumerSettings__TimeDelay: 5
+  
+
+  emailapi2:
+    build:
+      context: .
+      dockerfile: ./src/EmailAPIService/Dockerfile
+    image: emailapi:1.0
+    environment:
+      ConsumerSettings__ConsumerName: Consumer 2
+      ConsumerSettings__TimeDelay: 10
+
+volumes:
+  rabbitmq-data:
