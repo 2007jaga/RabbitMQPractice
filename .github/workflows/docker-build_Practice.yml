@@ -24,21 +24,9 @@ jobs:
       - name: checkout source code
         uses: actions/checkout@v4  # means GitHub Actions will check out the repository code onto the GitHub runner.
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4  #GitHub runner, install/setup the .NET 8 SDK so that I can run dotnet restore, dotnet build, and dotnet test."It does not build your application yet.It's only preparing the .NET environment.
-        with:
-          dotnet-version: '8.0.x'
-
-      - name: Restore dependencies
-        run: dotnet restore  #It reads your .sln / .csproj files and downloads the NuGet packages your application needs. We are intentionally putting Restore before Docker Build.
-
       - name: setup docker buildx
         uses: docker/setup-buildx-action@v3  #This prepares the Docker building environment on the Ubuntu runner.It is essentially saying: "GitHub runner, prepare Docker Buildx so I can build my Docker image."
-      
-      - name: Build application
-        run: dotnet build --no-restore --configuration   #So there is no reason for dotnet build to restore the packages again.
-      
-      
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
