@@ -3,8 +3,13 @@ name: Docker build Practice
 
 #workflow-dispatch is used for manuall run because for testing we dont need to push our code again and again after testing completed we can use
 #on:-push-main branch something like that
+# on:
+#   workflow_dispatch:
+
 on:
-  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
 
 permissions:
   contents: read          #Workflow can read repository
