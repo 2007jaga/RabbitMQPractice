@@ -96,7 +96,7 @@ jobs:
 
 
     deploy:
-      needs: docker-build
+      needs: docker-build   # The deploy job waits for the docker-build job to finish successfully.
       runs-on: ubuntu-latest
     
     
