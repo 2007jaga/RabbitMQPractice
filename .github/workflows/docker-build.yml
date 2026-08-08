@@ -1,10 +1,9 @@
-name: Docker build Practice
-
-
 #workflow-dispatch is used for manuall run because for testing we dont need to push our code again and again after testing completed we can use
 #on:-push-main branch something like that
 # on:
 #   workflow_dispatch:
+
+name: Docker build Practice
 
 on:
   push:
@@ -36,7 +35,7 @@ jobs:
         uses: docker/setup-buildx-action@v3  #This prepares the Docker building environment on the Ubuntu runner.It is essentially saying: "GitHub runner, prepare Docker Buildx so I can build my Docker image."
       
       - name: Build application
-        run: dotnet build --no-restore --configuration   #So there is no reason for dotnet build to restore the packages again.
+        run: dotnet build --no-restore --configuration Release   #So there is no reason for dotnet build to restore the packages again.
       
 
       - name: Publish application
@@ -76,8 +75,8 @@ jobs:
           file: ./src/OrderAPIService/Dockerfile
           push: true
 
-          cache-from: type=gha #Before building, check whether GitHub Actions already has Docker build layers that can be reused.
-          cache-to: type=gha,mode=max #After building, save the Docker build cache in GitHub Actions' cache storage
+          cache-from: type=gha,scope=orderapi #Before building, check whether GitHub Actions already has Docker build layers that can be reused.
+          cache-to: type=gha,mode=max,scope=orderapi #After building, save the Docker build cache in GitHub Actions' cache storage
 
           #tags: orderapi:1.0.0
           #tags: ghcr.io/${{ github.repository_owner }}/orderapi:1.0.0
@@ -95,15 +94,20 @@ jobs:
 #always points to the latest image published by this workflow.
 
 
-    deploy:
-      needs: docker-build   # The deploy job waits for the docker-build job to finish successfully.
-      runs-on: ubuntu-latest
+  deploy:
+    needs: docker-build   # The deploy job waits for the docker-build job to finish successfully.
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
-    
-      steps:
-        - name: Download application artifact
-          uses: actions/download-artifact@v4
-          with:
-            name: OrderAPIService
-            path: ./deploy
-
+    steps:
+      - name: Download application artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: OrderAPIService
+          path: ./deploy
+      
+      - name: Verify downloaded artifact
+        run: |
+          echo "Files downloaded:"
+          ls -la ./deploy
