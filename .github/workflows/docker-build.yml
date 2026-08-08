@@ -100,10 +100,10 @@ jobs:
       runs-on: ubuntu-latest
     
     
-    steps:
-      - name: Download application artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: OrderAPIService
-          path: ./deploy
+      steps:
+        - name: Download application artifact
+          uses: actions/download-artifact@v4
+          with:
+            name: OrderAPIService
+            path: ./deploy
 
