@@ -85,8 +85,6 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/${{ vars.DOCKER_IMAGE_NAME }}:${{ steps.version.outputs.version }}
             ghcr.io/${{ github.repository_owner }}/${{ vars.DOCKER_IMAGE_NAME }}:latest
             ghcr.io/${{ github.repository_owner }}/${{ vars.DOCKER_IMAGE_NAME }}:${{ github.sha }}
-
-
 # Now if someone asks:  "Which Docker image is production version 1.0.1?"  
 # You can directly use: orderapi:1.0.1
 
@@ -95,3 +93,17 @@ jobs:
 #And: 
 #orderapi:latest
 #always points to the latest image published by this workflow.
+
+
+    deploy:
+      needs: docker-build
+      runs-on: ubuntu-latest
+    
+    
+    steps:
+      - name: Download application artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: OrderAPIService
+          path: ./deploy
+
