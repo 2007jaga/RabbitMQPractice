@@ -1,6 +1,6 @@
 # Project Name is OrderAPIService and SolutionName is RabbitMQPractice like that GitHubWorkflow Name is RabbitMQ CI Pipeline
-# where it is show this name?:- Suupose we push our code GitHub Execute the workflow. on Github we see this name.
-# name is not Mandaotory.
+# Where it is show this name?:- Suupose we push our code GitHub Execute the workflow. on Github we see this name.
+# Name is Mandatory to write ? Name is not Mandaotory.
 name: RabbitMQ CI Pipeline
 
 # For e.g. Think about your house. You have a doorbell.
@@ -41,6 +41,13 @@ on:
       - main
 
 
+env:
+  DOTNET_VERSION: '8.0.x'
+  SOLUTION_FILE: RabbitMQPractice.slnx
+  BUILD_CONFIGURATION: Release
+  ORDER_API_PROJECT: src/OrderAPIService/OrderAPIService.csproj
+
+
 #
 # What is jobs:? Let's use a real-life example. Suppose your manager says:  "Build a house."  He doesn't tell one person to do everything. Instead, the work is divided.
 # House Project
@@ -77,8 +84,7 @@ on:
 ## Notice that one workflow can have many jobs. For our first workflow, we'll keep it simple. Only one job:
 # "jobs defines the collection of work that the workflow will execute. Each job is an independent unit of work and contains one or more steps."
 jobs:
-  build:
-
+  build:    
 
 # GitHub says: "I have one job named build."  At this point, GitHub knows the job exists. But it still doesn't know:
 
@@ -101,7 +107,9 @@ jobs:
 # Step 5  Run tests
 # Step 6  Delete the Runner
     runs-on: ubuntu-latest
-
+      #-- Whenever you see: run: Tell yourself:  "Now I'm inside a terminal." $variablename
+                                                 # else  out side the runner "GitHub is still reading my variable ${{ env.DOTNET_VERSION }}."
+  #-- this is call outside the runner
 # Imagine you're building a .NET application. Instead of writing your own JSON serializer, you use: using System.Text.Json;
 #                                             instead of writing your own logging framework, you use: using Microsoft.Extensions.Logging;
 # Just like NuGet packages have versions:  Newtonsoft.Json 13.0.3
@@ -124,15 +132,15 @@ jobs:
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
       
       # Restore	          Downloads all NuGet packages
       - name: Restore dependencies
-        run: dotnet restore RabbitMQPractice.slnx
+        run: dotnet restore $SOLUTION_FILE
 
       # Build	            Compiles your solution
       - name: Build solution
-        run: dotnet build RabbitMQPractice.slnx --configuration Release --no-restore
+        run: dotnet build $SOLUTION_FILE --configuration $BUILD_CONFIGURATION --no-restore
 
       
       
@@ -142,7 +150,7 @@ jobs:
 
       # Publish	          Creates the deployable application
       - name: Publish Order API
-        run: dotnet publish src/OrderAPIService/OrderAPIService.csproj --configuration Release --output ./publish --no-build
+        run: dotnet publish $ORDER_API_PROJECT --configuration $BUILD_CONFIGURATION --output ./publish --no-build
 
       # Upload            Artifact	Stores the published output in GitHub Actions
       - name: Upload Build Artifact

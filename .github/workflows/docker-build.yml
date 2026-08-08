@@ -1,0 +1,27 @@
+name: Docker build Practice
+
+
+#workflow-dispatch is used for manuall run because for testing we dont need to push our code again and again after testing completed we can use
+#on:-push-main branch something like that
+on: 
+  workflow-dispatch: 
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout source code
+        uses: actions/checkout@v4
+
+      - name: setup docker buildx
+        uses: docker/setup-buildx-actioin@v3
+
+      - name: build docker images
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/OrderAPIService/Dockerfile
+          push: false
+          tags: orderapi:1.0.0
+          
