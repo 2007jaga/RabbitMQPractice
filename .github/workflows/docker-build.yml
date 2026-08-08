@@ -76,9 +76,9 @@ jobs:
           #tags: orderapi:1.0.0
           #tags: ghcr.io/${{ github.repository_owner }}/orderapi:1.0.0
           tags: |
-            ghcr.io/${{ github.repository_owner }}/orderapi:${{ steps.version.outputs.version }}
-            ghcr.io/${{ github.repository_owner }}/orderapi:latest
-            ghcr.io/${{ github.repository_owner }}/orderapi:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/${{ vars.DOCKER_IMAGE_NAME }}:${{ steps.version.outputs.version }}
+            ghcr.io/${{ github.repository_owner }}/${{ vars.DOCKER_IMAGE_NAME }}:latest
+            ghcr.io/${{ github.repository_owner }}/${{ vars.DOCKER_IMAGE_NAME }}:${{ github.sha }}
 
 
 # Now if someone asks:  "Which Docker image is production version 1.0.1?"  
