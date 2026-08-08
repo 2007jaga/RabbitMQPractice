@@ -34,15 +34,30 @@ jobs:
           username: ${{ github.actor }}         #the GitHub user who triggered the workflow.
           password: ${{ secrets.GITHUB_TOKEN }}  #temporary token automatically provided to the workflow.
 
+      - name: Get Docker version
+        id: version
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Docker version: $VERSION"
+
+
+        #GITHUB_REF_NAME = v1.0.0
+        #VERSION="${GITHUB_REF_NAME#v}" = VERSION=1.0.0
+        #echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+        #${{ steps.version.outputs.version }}
+        
       - name: build docker images
-        uses: docker/build-push-action@v6   # Build Docker image    +    Optionally push Docker image. Pushing is depending open the option true or false.
+        uses: docker/build-push-action@v6   # Build Docker image  +  Optionally push Docker image. Pushing is depending open the option true or false.
         with:
           context: .
           file: ./src/OrderAPIService/Dockerfile
           push: true
           #tags: orderapi:1.0.0
           #tags: ghcr.io/${{ github.repository_owner }}/orderapi:1.0.0
-          tags: |            
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/orderapi:${{ steps.version.outputs.version }}
             ghcr.io/${{ github.repository_owner }}/orderapi:latest
             ghcr.io/${{ github.repository_owner }}/orderapi:${{ github.sha }}
 
