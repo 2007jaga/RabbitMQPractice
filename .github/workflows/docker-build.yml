@@ -47,13 +47,17 @@ jobs:
         #VERSION="${GITHUB_REF_NAME#v}" = VERSION=1.0.0
         #echo "version=$VERSION" >> "$GITHUB_OUTPUT"
         #${{ steps.version.outputs.version }}
-        
+
       - name: build docker images
         uses: docker/build-push-action@v6   # Build Docker image  +  Optionally push Docker image. Pushing is depending open the option true or false.
         with:
           context: .
           file: ./src/OrderAPIService/Dockerfile
           push: true
+
+          cache-from: type=gha #Before building, check whether GitHub Actions already has Docker build layers that can be reused.
+          cache-to: type=gha,mode=max #After building, save the Docker build cache in GitHub Actions' cache storage
+
           #tags: orderapi:1.0.0
           #tags: ghcr.io/${{ github.repository_owner }}/orderapi:1.0.0
           tags: |
@@ -61,3 +65,12 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/orderapi:latest
             ghcr.io/${{ github.repository_owner }}/orderapi:${{ github.sha }}
 
+
+# Now if someone asks:  "Which Docker image is production version 1.0.1?"  
+# You can directly use: orderapi:1.0.1
+
+# If someone asks: "Which exact source commit created this image?"
+#You can use:  orderapi:c2c0c2b0bf4c478e1ce50f640e7dd069ee67a54a 
+#And: 
+#orderapi:latest
+#always points to the latest image published by this workflow.

@@ -161,6 +161,7 @@ jobs:
 
 # What each step does
 # Step	                  Purpose
+# --------------------------------------------------
 # Checkout	        Downloads your source code to the runner
 # Setup .NET	      Installs the .NET 8 SDK
 # Restore	          Downloads all NuGet packages
