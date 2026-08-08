@@ -112,6 +112,11 @@ jobs:
           echo "Files downloaded:"
           ls -la ./deploy
 
+      - name: Test repository secret
+        run: |
+          echo "Secret is configured:"
+          echo "${{ secrets.PRACTICE_SECRET }}" | sed 's/./*/g'
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
