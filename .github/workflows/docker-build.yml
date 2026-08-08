@@ -36,5 +36,8 @@ jobs:
           file: ./src/OrderAPIService/Dockerfile
           push: true
           #tags: orderapi:1.0.0
-          tags: ghcr.io/${{ github.repository_owner }}/orderapi:1.0.0
+          #tags: ghcr.io/${{ github.repository_owner }}/orderapi:1.0.0
+          tags: |            
+            ghcr.io/${{ github.repository_owner }}/orderapi:latest
+            ghcr.io/${{ github.repository_owner }}/orderapi:${{ github.sha }}
 
