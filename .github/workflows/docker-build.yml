@@ -6,22 +6,35 @@ name: Docker build Practice
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read          #Workflow can read repository
+  packages: write         #Workflow can upload Docker package/image
+  #Without the appropriate package permission, the push can fail with a permission/authorization error.
+
 jobs:
   docker-build:
     runs-on: ubuntu-latest
 
     steps:
       - name: checkout source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4  # means GitHub Actions will check out the repository code onto the GitHub runner.
 
       - name: setup docker buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v3  #This prepares the Docker building environment on the Ubuntu runner.It is essentially saying: "GitHub runner, prepare Docker Buildx so I can build my Docker image."
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io                     #GitHub Container Registry.
+          username: ${{ github.actor }}         #the GitHub user who triggered the workflow.
+          password: ${{ secrets.GITHUB_TOKEN }}  #temporary token automatically provided to the workflow.
 
       - name: build docker images
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v6   # Build Docker image    +    Optionally push Docker image. Pushing is depending open the option true or false.
         with:
           context: .
           file: ./src/OrderAPIService/Dockerfile
-          push: false
-          tags: orderapi:1.0.0
+          push: true
+          #tags: orderapi:1.0.0
+          tags: ghcr.io/${{ github.repository_owner }}/orderapi:1.0.0
 
