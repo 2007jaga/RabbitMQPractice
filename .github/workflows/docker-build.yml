@@ -19,11 +19,14 @@ jobs:
   docker-build:
     runs-on: ubuntu-latest
     environment: ${{ vars.ENVIRONMENT_NAME }}
-
-
+    
     steps:
       - name: checkout source code
         uses: actions/checkout@v4  # means GitHub Actions will check out the repository code onto the GitHub runner.
+
+
+      - name: Show environment
+        run: echo "Running in ${{ vars.ENVIRONMENT_NAME }}"  
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4  #GitHub runner, install/setup the .NET 8 SDK so that I can run dotnet restore, dotnet build, and dotnet test."It does not build your application yet.It's only preparing the .NET environment.
