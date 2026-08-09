@@ -28,6 +28,9 @@ jobs:
       - name: Show environment
         run: echo "Running in ${{ vars.ENVIRONMENT_NAME }}"  
 
+      - name: Test environment secret
+        run: echo "Secret is ${{ secrets.SECRET_NAME }}"  
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4  #GitHub runner, install/setup the .NET 8 SDK so that I can run dotnet restore, dotnet build, and dotnet test."It does not build your application yet.It's only preparing the .NET environment.
         with:
