@@ -18,6 +18,8 @@ permissions:
 jobs:
   docker-build:
     runs-on: ubuntu-latest
+    environment: ${{ vars.ENVIRONMENT_NAME }}
+
 
     steps:
       - name: checkout source code
